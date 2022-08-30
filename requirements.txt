@@ -12,5 +12,3 @@ scipy
 tsaug
 tqdm
 pandas
-
-
