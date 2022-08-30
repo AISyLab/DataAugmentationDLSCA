@@ -1,6 +1,5 @@
 import sys
 from src.datasets.load_ascadr import *
-from src.datasets.load_ascadv2 import *
 from src.datasets.load_dpav42 import *
 from src.preprocess.generate_hiding_coutermeasures import *
 from src.neural_networks.models import *
@@ -18,27 +17,14 @@ sys.path.append("/home/nfs/gperin/paper_1_data_augmentation_paper")
 
 if __name__ == "__main__":
 
-    # dataset_name = sys.argv[1]
-    # model_type = sys.argv[2]
-    # leakage_model = sys.argv[3]
-    # noise = True if int(sys.argv[4]) == 1 else False
-    # desync = True if int(sys.argv[5]) == 1 else False
-    # attack_type = sys.argv[6]
-    # npoi = int(sys.argv[7])
-    # data_augmentation = int(sys.argv[8])
-    # gaussian_noise = 0
-    # desync_level = 50
-    # trace_folder = "/tudelft.net/staff-umbrella/dlsca/Guilherme"
-    # folder_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/mask_learnability_results/explain"
-
-    dataset_name = "ascad-variable"
-    model_type = "cnn"
-    leakage_model = "ID"
-    desync = True
-    gaussian_noise = True
-    time_warping = False
-    trace_folder = "D:/traces"
-    folder_results = "D:/postdoc/paper_data_augmentation/random_search"
+    dataset_name = sys.argv[1]
+    model_type = sys.argv[2]
+    leakage_model = sys.argv[3]
+    desync = True if int(sys.argv[4]) == 1 else False
+    gaussian_noise = True if int(sys.argv[5]) == 1 else False
+    time_warping = True if int(sys.argv[6]) == 1 else False
+    trace_folder = "/tudelft.net/staff-umbrella/dlsca/Guilherme"
+    folder_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/paper_1_data_augmentation_results/random_search"
 
     dataset_parameters = None
     class_name = None
@@ -56,8 +42,8 @@ if __name__ == "__main__":
         class_name = ReadDPAV42
     if dataset_name == "ascad-variable":
         dataset_parameters = {
-            "n_profiling": 2000,
-            "n_profiling_augmented": 1000,
+            "n_profiling": 200000,
+            "n_profiling_augmented": 100000,
             "n_attack": 5000,
             "n_attack_ge": 3000,
             "target_byte": 2,
