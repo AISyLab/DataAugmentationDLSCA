@@ -8,6 +8,11 @@ cd DataAugmentationDLSCA
 pip install -r requirements.txt
 ```
 
+### Setting folder paths
+
+User needs to define the paths in:
+- ```script_search.py``` lines 16 (root folder, where ```script_search.py``` is located), 26 (traces folder) and 27 (results folder).
+
 ### Random Search
 
 Hyperparameters search ranges are set in ```src/hyperparameters/random_search_ranges.py```
