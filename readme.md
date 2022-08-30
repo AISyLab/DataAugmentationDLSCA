@@ -13,6 +13,8 @@ pip install -r requirements.txt
 User needs to define the paths in:
 - ```script_search.py``` lines 16 (root folder, where ```script_search.py``` is located), 26 (traces folder) and 27 (results folder).
 
+Simply copy the ```ascad-variable.h5``` (traceset with 1400 samples per trace) into the trace folder.
+
 ### Analysis parameters for data augmentation
 
 - Number of augmented traces: in ```script_search.py``` file, there is a structure called ```dataset_parameters``` where the user sets the amount of augmented profiling traces through "n_profiling_augmented" option. 
