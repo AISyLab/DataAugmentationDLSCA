@@ -34,7 +34,7 @@ if __name__ == "__main__":
     dataset_name = "ascad-variable"
     model_type = "cnn"
     leakage_model = "ID"
-    desync = False
+    desync = True
     gaussian_noise = True
     time_warping = False
     trace_folder = "D:/traces"
