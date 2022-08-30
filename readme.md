@@ -16,7 +16,7 @@ User needs to define the paths in:
 ### Analysis parameters for data augmentation
 
 - Number of augmented traces: in ```script_search.py``` file, there is a structure called ```dataset_parameters``` where the user sets the amount of augmented profiling traces through "n_profiling_augmented" option. 
-- Desynchronization level: also set to max of 50 samples.
+- Desynchronization level: also set to max of 50 samples. Desynchronization levels follows a Gaussian distribution.
 - Gaussian noise standard deviation: in ```src/preprocess/generate_hiding_countermeasures.py```, function ```make_gaussian_noise```, the level of noise can be set by changing the ```std``` variable. Default value is 5.
 - Gaussian noise standard deviation in augmentation: in ```src/training/data_augmentation.py```, line 75, ```std``` variable defines the level of noise for data augmentation. Default is 1.
 
