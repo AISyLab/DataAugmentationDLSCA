@@ -11,10 +11,10 @@
 # 500MB memory per core
 # this is a hard limit
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=jobspernode:four:1
-#SBATCH --mem-per-cpu=5000MB
-#SBATCH --gres=gpu:v100:1
+#SBATCH --mem-per-cpu=2500MB
+#SBATCH --gres=gpu:v100:0
 
 # you may not place bash commands before the last SBATCH directive
 module use /opt/insy/modulefiles

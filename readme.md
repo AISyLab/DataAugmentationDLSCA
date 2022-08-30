@@ -45,3 +45,11 @@ Example (desynchronization and time warping):
 ```
 python random_search.py ascad-variable cnn ID 1 0 1 
 ```
+
+
+### Running with sbatch
+
+```
+sbatch run_search.sbatch ascad-variable cnn ID 1 0 0 
+```
+
