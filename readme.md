@@ -15,6 +15,10 @@ User needs to define the paths in:
 
 Simply copy the ```ascad-variable.h5``` (traceset with 1400 samples per trace) into the trace folder.
 
+### Running random search with and without data augmentation
+
+In ```script_search.py```, line 29, variable ```data_augmentation``` defines if data augmentation is implemented or not during training.
+
 ### Analysis parameters for data augmentation
 
 - Number of augmented traces: in ```script_search.py``` file, there is a structure called ```dataset_parameters``` where the user sets the amount of augmented profiling traces through "n_profiling_augmented" option. 
@@ -35,6 +39,8 @@ Arguments:
 - ```[model_type]```: ```CNN``` or ```MLP```
 - ```[leakage_model]```: ```ID``` or ```HW```
 - ```[desync]```, ```[gaussian_noise]``` and ```[time_warping]``` should be ```0``` for disable and ```1``` for enable.
+
+```[desync]```, ```[gaussian_noise]``` and ```[time_warping]``` defines which type of hiding countermeasures we add to original dataset.
 
 Example (only desynchronization):
 

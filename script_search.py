@@ -26,6 +26,8 @@ if __name__ == "__main__":
     trace_folder = "/tudelft.net/staff-umbrella/dlsca/Guilherme"
     folder_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/paper_1_data_augmentation_results/random_search"
 
+    data_augmentation = True
+
     dataset_parameters = None
     class_name = None
 
@@ -93,7 +95,7 @@ if __name__ == "__main__":
                                                                                                      hp_values)
         """ Train model """
         model, history = train_model(baseline_model, model_type, dataset, dataset_parameters["epochs"], hp_values["batch_size"],
-                                     steps_per_epoch, n_batches_prof, n_batches_augmented,
+                                     steps_per_epoch, n_batches_prof, n_batches_augmented, data_augmentation=data_augmentation,
                                      desync=desync, gaussian_noise=gaussian_noise, time_warping=time_warping)
 
         """ Compute guessing entropy and perceived information """
