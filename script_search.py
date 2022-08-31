@@ -37,7 +37,7 @@ if __name__ == "__main__":
             "n_profiling_augmented": 70000,
             "n_attack": 5000,
             "n_attack_ge": 3000,
-            "target_byte": 0,
+            "target_byte": 12,
             "npoi": 2000,
             "epochs": 100
         }
