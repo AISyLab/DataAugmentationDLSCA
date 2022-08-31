@@ -38,7 +38,7 @@ if __name__ == "__main__":
             "n_attack": 5000,
             "n_attack_ge": 3000,
             "target_byte": 0,
-            "npoi": 5000,
+            "npoi": 2000,
             "epochs": 100
         }
         class_name = ReadDPAV42
