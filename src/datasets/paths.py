@@ -6,7 +6,7 @@ def get_dataset_filepath(trace_folder, dataset_name, npoi):
         },
         "dpa_v42": {
             800: f"{trace_folder}/DPAV42/DPAV42_opoi/dpa_v42_opoi.h5",
-            5000: f"{trace_folder}/DPAV42/DPAV42_nopoi/dpa_v42_nopoi_window_10_trim_5000_npoi.h5",
+            2000: f"{trace_folder}/DPAV42/DPAV42_nopoi/dpa_v42_nopoi_window_10_trim_2000_npoi.h5",
         },
         "ascadv2": {
             1000: f"{trace_folder}/ascadv2-extracted.h5",
