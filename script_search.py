@@ -21,8 +21,9 @@ if __name__ == "__main__":
     model_type = sys.argv[2]
     leakage_model = sys.argv[3]
     desync = True if int(sys.argv[4]) == 1 else False
-    gaussian_noise = True if int(sys.argv[5]) == 1 else False
-    time_warping = True if int(sys.argv[6]) == 1 else False
+    desync_level = True if int(sys.argv[5]) == 1 else False
+    gaussian_noise = True if int(sys.argv[6]) == 1 else False
+    time_warping = True if int(sys.argv[7]) == 1 else False
     trace_folder = "/tudelft.net/staff-umbrella/dlsca/Guilherme"
     folder_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/paper_1_data_augmentation_results/random_search"
 
@@ -95,8 +96,8 @@ if __name__ == "__main__":
                                                                                                      hp_values)
         """ Train model """
         model, history = train_model(baseline_model, model_type, dataset, dataset_parameters["epochs"], hp_values["batch_size"],
-                                     steps_per_epoch, n_batches_prof, n_batches_augmented, data_augmentation=data_augmentation,
-                                     desync=desync, gaussian_noise=gaussian_noise, time_warping=time_warping)
+                                     steps_per_epoch, n_batches_prof, n_batches_augmented, desync_level,
+                                     data_augmentation=data_augmentation, desync=desync, gaussian_noise=gaussian_noise)
 
         """ Compute guessing entropy and perceived information """
         predictions = model.predict(dataset.x_attack)

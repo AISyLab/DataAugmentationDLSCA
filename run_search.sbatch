@@ -25,7 +25,7 @@ cd /home/nfs/gperin/AISY_Framework
 source env/bin/activate
 cd /home/nfs/gperin/paper_1_data_augmentation_paper
 
-srun python script_search.py $1 $2 $3 $4 $5 $6
+srun python script_search.py $1 $2 $3 $4 $5 $6 $7
 exit 0
 
 
