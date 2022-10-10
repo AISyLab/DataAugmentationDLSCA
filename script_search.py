@@ -21,9 +21,9 @@ if __name__ == "__main__":
     model_type = sys.argv[2]
     leakage_model = sys.argv[3]
     desync = True if int(sys.argv[4]) == 1 else False
-    desync_level = True if int(sys.argv[5]) == 1 else False
-    gaussian_noise = True if int(sys.argv[6]) == 1 else False
-    time_warping = True if int(sys.argv[7]) == 1 else False
+    desync_level = int(sys.argv[5])
+    desync_level_augmentation = int(sys.argv[6])
+    gaussian_noise = True if int(sys.argv[7]) == 1 else False
     trace_folder = "/tudelft.net/staff-umbrella/dlsca/Guilherme"
     folder_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/paper_1_data_augmentation_results/random_search"
 
@@ -68,11 +68,9 @@ if __name__ == "__main__":
 
     """ Add hiding countermeasures """
     if desync:
-        dataset = make_desync(dataset)
+        dataset = make_desync(dataset, desync_level)
     if gaussian_noise:
         dataset = make_gaussian_noise(dataset)
-    if time_warping:
-        dataset = make_time_warping(dataset)
 
     """ Rescale and reshape (if CNN) """
     dataset.rescale(True if model_type == "cnn" else False)
@@ -96,7 +94,7 @@ if __name__ == "__main__":
                                                                                                      hp_values)
         """ Train model """
         model, history = train_model(baseline_model, model_type, dataset, dataset_parameters["epochs"], hp_values["batch_size"],
-                                     steps_per_epoch, n_batches_prof, n_batches_augmented, desync_level,
+                                     steps_per_epoch, n_batches_prof, n_batches_augmented, desync_level_augmentation,
                                      data_augmentation=data_augmentation, desync=desync, gaussian_noise=gaussian_noise)
 
         """ Compute guessing entropy and perceived information """
@@ -105,15 +103,15 @@ if __name__ == "__main__":
         PI = information(predictions, dataset.attack_labels, dataset.classes)
 
         """ Save results """
-        new_filename = get_filename(folder_results, dataset_name, model_type, leakage_model, desync=desync, gaussian_noise=gaussian_noise,
-                                    time_warping=time_warping)
+        new_filename = get_filename(folder_results, dataset_name, model_type, leakage_model, desync=desync, gaussian_noise=gaussian_noise)
         np.savez(new_filename,
                  GE=GE,
                  NT=NT,
                  PI=PI,
                  hp_values=hp_values,
                  history=history.history,
-                 dataset=dataset_parameters
+                 dataset=dataset_parameters,
+                 desync_level_augmentation=desync_level_augmentation
                  )
 
         del model

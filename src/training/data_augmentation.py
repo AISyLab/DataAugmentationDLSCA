@@ -3,7 +3,7 @@ import random
 
 
 def generate_data_augmentation(data_set_samples, data_set_labels, batch_size, model_name, n_batches_prof, n_batches_augmented,
-                               desync_level, desync=False, gaussian_noise=False):
+                               desync_level_augmentation, desync=False, gaussian_noise=False):
     ns = len(data_set_samples[0])
 
     r = random.randint(0, 100000)
@@ -51,14 +51,14 @@ def generate_data_augmentation(data_set_samples, data_set_labels, batch_size, mo
                     200: 28,
                     400: 56
                 }
-                std = std_dict[desync_level]
+                std = std_dict[desync_level_augmentation]
                 mean = 0
 
                 # add desynchronization to profiling traces
                 nums = np.random.normal(mean, std, x_mini_batch.shape[0])
-                bins = np.linspace(-int(desync_level / 2), int(desync_level / 2), desync_level, dtype='int')
+                bins = np.linspace(-int(desync_level_augmentation / 2), int(desync_level_augmentation / 2), desync_level_augmentation, dtype='int')
                 digitized = bins[np.digitize(np.squeeze(nums.reshape(1, -1)), bins) - 1].reshape(len(nums), -1)
-                shifts = [s[0] + int(desync_level / 2) for s in digitized]  # add 25 to only have positive shifts
+                shifts = [s[0] + int(desync_level_augmentation / 2) for s in digitized]  # add 25 to only have positive shifts
 
                 # add random shift to batch
                 for trace_index in range(batch_size):
