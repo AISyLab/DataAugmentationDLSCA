@@ -11,6 +11,7 @@ from src.training.train import *
 from src.utils.utils import *
 import gc
 import os
+import random
 
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 sys.path.append("/home/nfs/gperin/paper_1_data_augmentation_paper")
@@ -18,24 +19,35 @@ sys.path.append("/home/nfs/gperin/paper_1_data_augmentation_paper")
 if __name__ == "__main__":
 
     dataset_name = sys.argv[1]
-    model_type = sys.argv[2]
-    leakage_model = sys.argv[3]
-    desync = True if int(sys.argv[4]) == 1 else False
-    desync_level = int(sys.argv[5])
-    desync_level_augmentation = int(sys.argv[6])
-    gaussian_noise = True if int(sys.argv[7]) == 1 else False
+    leakage_model = sys.argv[2]
+    desync = True if int(sys.argv[3]) == 1 else False
+    desync_level = int(sys.argv[4])
+    desync_level_augmentation = int(sys.argv[5])
+    gaussian_noise = True if int(sys.argv[6]) == 1 else False
+    std = float(sys.argv[7])
+    std_augmentation = float(sys.argv[8])
     trace_folder = "/tudelft.net/staff-umbrella/dlsca/Guilherme"
     folder_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/paper_1_data_augmentation_results/random_search"
 
-    data_augmentation = True
+    # dataset_name = "ascad-variable"
+    # leakage_model = "ID"
+    # desync = False
+    # desync_level = 0
+    # desync_level_augmentation = 0
+    # gaussian_noise = True
+    # std = 1.2
+    # std_augmentation = 0
+    # trace_folder = "D:/traces"
+    # folder_results = "D:/postdoc/paper_data_augmentation/random_search"
 
     dataset_parameters = None
     class_name = None
 
+    model_type = "cnn"
+
     if dataset_name == "dpa_v42":
         dataset_parameters = {
             "n_profiling": 70000,
-            "n_profiling_augmented": 70000,
             "n_attack": 5000,
             "n_attack_ge": 3000,
             "target_byte": 12,
@@ -46,7 +58,6 @@ if __name__ == "__main__":
     if dataset_name == "ascad-variable":
         dataset_parameters = {
             "n_profiling": 200000,
-            "n_profiling_augmented": 100000,
             "n_attack": 5000,
             "n_attack_ge": 3000,
             "target_byte": 2,
@@ -70,13 +81,16 @@ if __name__ == "__main__":
     if desync:
         dataset = make_desync(dataset, desync_level)
     if gaussian_noise:
-        dataset = make_gaussian_noise(dataset)
+        dataset = make_gaussian_noise(dataset, std)
 
     """ Rescale and reshape (if CNN) """
     dataset.rescale(True if model_type == "cnn" else False)
 
     """ Generate key guessing table """
     labels_key_guess = dataset.labels_key_hypothesis_attack
+
+    random.seed(None)
+    np.random.seed(None)
 
     """ Run random search """
     for search_index in range(100):
@@ -85,17 +99,11 @@ if __name__ == "__main__":
         hp_values["seed"] = np.random.randint(1048576)
         print(hp_values)
 
-        steps_per_epoch = int((dataset_parameters["n_profiling"] + dataset_parameters["n_profiling_augmented"]) / hp_values["batch_size"])
-        n_batches_prof = int(dataset_parameters["n_profiling"] / hp_values["batch_size"])
-        n_batches_augmented = int(dataset_parameters["n_profiling_augmented"] / hp_values["batch_size"])
-
         """ Create model """
         baseline_model = cnn(dataset.classes, dataset.ns, hp_values) if model_type == "cnn" else mlp(dataset.classes, dataset.ns,
                                                                                                      hp_values)
         """ Train model """
-        model, history = train_model(baseline_model, model_type, dataset, dataset_parameters["epochs"], hp_values["batch_size"],
-                                     steps_per_epoch, n_batches_prof, n_batches_augmented, desync_level_augmentation,
-                                     data_augmentation=data_augmentation, desync=desync, gaussian_noise=gaussian_noise)
+        model, history = train_model(baseline_model, dataset, dataset_parameters["epochs"], hp_values["batch_size"])
 
         """ Compute guessing entropy and perceived information """
         predictions = model.predict(dataset.x_attack)
@@ -103,7 +111,8 @@ if __name__ == "__main__":
         PI = information(predictions, dataset.attack_labels, dataset.classes)
 
         """ Save results """
-        new_filename = get_filename(folder_results, dataset_name, model_type, leakage_model, desync=desync, gaussian_noise=gaussian_noise)
+        new_filename = get_filename(folder_results, dataset_name, model_type, leakage_model, desync_level, 0, std,
+                                    0, desync=desync, gaussian_noise=gaussian_noise)
         np.savez(new_filename,
                  GE=GE,
                  NT=NT,
@@ -111,7 +120,12 @@ if __name__ == "__main__":
                  hp_values=hp_values,
                  history=history.history,
                  dataset=dataset_parameters,
-                 desync_level_augmentation=desync_level_augmentation
+                 desync=desync,
+                 desync_level=desync_level,
+                 desync_level_augmentation=0,
+                 gaussian_noise=gaussian_noise,
+                 std=std,
+                 std_augmentation=0
                  )
 
         del model

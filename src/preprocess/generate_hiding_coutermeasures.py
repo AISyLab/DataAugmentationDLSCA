@@ -2,6 +2,7 @@ from numpy.random import RandomState
 from tqdm import tqdm
 from tsaug import TimeWarp
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def make_desync(dataset, desync_level):
@@ -13,9 +14,12 @@ def make_desync(dataset, desync_level):
     std_dict = {
         25: 3.5,
         50: 7,
+        75: 11.5,
         100: 14,
-        200: 28,
-        400: 56
+        125: 17.5,
+        150: 21,
+        175: 24.5,
+        200: 28
     }
 
     # parameters for Gaussian distribution
@@ -23,10 +27,14 @@ def make_desync(dataset, desync_level):
     std = std_dict[desync_level]
 
     # add desynchronization to profiling traces
-    nums = np.random.normal(mean, std, dataset.x_profiling.shape[0])
-    bins = np.linspace(-int(desync_level / 2), int(desync_level / 2), desync_level, dtype='int')
-    digitized = bins[np.digitize(np.squeeze(nums.reshape(1, -1)), bins) - 1].reshape(len(nums), -1)
-    shifts_profiling = [s[0] + int(desync_level / 2) for s in digitized]  # add 25 to only have positive shifts
+    normal_dist_numbers = np.random.normal(mean, std, dataset.x_profiling.shape[0])
+    normal_dist_numbers_int = np.round(normal_dist_numbers)
+    shifts_profiling = np.array([int(s) + int(desync_level / 2) for s in normal_dist_numbers_int])  # add desync_level / 2 to only have positive shifts
+    shifts_profiling[shifts_profiling < 0] = int(desync_level / 2)
+    shifts_profiling[shifts_profiling > desync_level] = int(desync_level / 2)
+
+    plt.hist(shifts_profiling, bins=desync_level*2)
+    plt.show()
 
     dataset.x_profiling = dataset.x_profiling.reshape(dataset.x_profiling.shape[0], dataset.x_profiling.shape[1])
     for trace_index in tqdm(range(dataset.n_profiling)):
@@ -37,11 +45,12 @@ def make_desync(dataset, desync_level):
                                                                                         0:int(shifts_profiling[trace_index])]
         dataset.x_profiling[trace_index] = trace_tmp_shifted
 
-    # add desynchronization to attack traces
-    nums = np.random.normal(mean, std, dataset.x_attack.shape[0])
-    bins = np.linspace(-int(desync_level / 2), int(desync_level / 2), desync_level, dtype='int')
-    digitized = bins[np.digitize(np.squeeze(nums.reshape(1, -1)), bins) - 1].reshape(len(nums), -1)
-    shifts_attack = [s[0] + int(desync_level / 2) for s in digitized]  # add 25 to only have positive shifts
+    normal_dist_numbers = np.random.normal(mean, std, dataset.x_attack.shape[0])
+    normal_dist_numbers_int = np.round(normal_dist_numbers)
+    shifts_attack = np.array(
+        [int(s) + int(desync_level / 2) for s in normal_dist_numbers_int])  # add desync_level / 2 to only have positive shifts
+    shifts_attack[shifts_attack < 0] = int(desync_level / 2)
+    shifts_attack[shifts_attack > desync_level] = int(desync_level / 2)
 
     dataset.x_attack = dataset.x_attack.reshape(dataset.x_attack.shape[0], dataset.x_attack.shape[1])
     for trace_index in tqdm(range(dataset.n_attack)):
@@ -54,12 +63,12 @@ def make_desync(dataset, desync_level):
     return dataset
 
 
-def make_gaussian_noise(dataset):
+def make_gaussian_noise(dataset, std):
     print("adding gaussian noise countermeasure")
 
     # parameters for Gaussian distribution
     mean = 0
-    std = 5
+    std = std
 
     # set fixed seed to allow reproducibility
     np.random.seed(12345)
