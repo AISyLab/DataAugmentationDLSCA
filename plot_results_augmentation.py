@@ -87,7 +87,7 @@ cell_color_dict = {
 
 colors = ["blue", "red", "green", "orange", "purple", "yellow", "grey", "black"]
 
-for desync_level in [25, 50, 75, 100, 125, 150]:
+for desync_level in [25, 50, 75, 100, 125, 150, 200]:
 
     figure = plt.gcf()
     figure.set_size_inches(6, 3)

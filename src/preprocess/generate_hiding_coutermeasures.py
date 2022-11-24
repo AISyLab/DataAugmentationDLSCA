@@ -33,8 +33,8 @@ def make_desync(dataset, desync_level):
     shifts_profiling[shifts_profiling < 0] = int(desync_level / 2)
     shifts_profiling[shifts_profiling > desync_level] = int(desync_level / 2)
 
-    plt.hist(shifts_profiling, bins=desync_level*2)
-    plt.show()
+    # plt.hist(shifts_profiling, bins=desync_level*2)
+    # plt.show()
 
     dataset.x_profiling = dataset.x_profiling.reshape(dataset.x_profiling.shape[0], dataset.x_profiling.shape[1])
     for trace_index in tqdm(range(dataset.n_profiling)):

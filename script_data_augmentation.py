@@ -70,20 +70,29 @@ if __name__ == "__main__":
     # dataset_name = "ascad-variable"
     # leakage_model = "ID"
     # desync = True
-    # desync_level = 12
+    # desync_level = 25
     # desync_level_augmentation = 12
     # gaussian_noise = False
     # std = 1
     # std_augmentation = 1
-    # file_id = 1
+    # file_id = 521
     # n_prof = 200000
-    # n_augmented = 200000
+    # n_augmented = 20000
     # trace_folder = "D:/traces"
     # folder_results = "D:/postdoc/paper_data_augmentation/random_search"
-    # save_results = "D:/postdoc/paper_data_augmentation/data_augmentation"
-    # data_augmentation_per_epoch = True
-    # augmented_traces_only = False
-
+    # data_augmentation_per_epoch = False
+    # augmented_traces_only = True
+    #
+    # if data_augmentation_per_epoch:
+    #     if augmented_traces_only:
+    #         save_results = "D:/postdoc/paper_data_augmentation/data_augmentation/data_augmentation_per_epoch/augmented_traces_only"
+    #     else:
+    #         save_results = "D:/postdoc/paper_data_augmentation/data_augmentation/data_augmentation_per_epoch/augmented_and_original_traces"
+    # else:
+    #     if augmented_traces_only:
+    #         save_results = "D:/postdoc/paper_data_augmentation/data_augmentation/data_augmentation_same_all_epochs/augmented_traces_only"
+    #     else:
+    #         save_results = "D:/postdoc/paper_data_augmentation/data_augmentation/data_augmentation_same_all_epochs/augmented_and_original_traces"
 
     model_type = "cnn"
 
