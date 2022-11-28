@@ -29,7 +29,7 @@ def train_model_augmentation(model, model_type, dataset, epochs, batch_size, ste
         epochs=epochs,
         verbose=2,
         validation_data=(dataset.x_attack, dataset.y_attack),
-        validation_steps=int(len(dataset.x_attack) / batch_size),
+        # validation_steps=int(len(dataset.x_attack) / batch_size),
         callbacks=[])
 
     return model, history

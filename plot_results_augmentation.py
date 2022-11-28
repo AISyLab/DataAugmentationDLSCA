@@ -9,7 +9,7 @@ leakage_model = "ID"
 
 n_prof = 200000
 
-file_id_dict = {
+file_id_dict_id = {
     25: 521,
     50: 194,
     75: 112,
@@ -18,6 +18,17 @@ file_id_dict = {
     150: 268,
     175: 66,
     200: 74
+}
+
+file_id_dict_hw = {
+    25: 7,
+    50: 108,
+    75: 161,
+    100: 201,
+    125: 114,
+    150: 71,
+    175: 78,
+    200: 129
 }
 
 desync_level_augmentation_dict = {
@@ -85,9 +96,9 @@ cell_color_dict = {
     50: "\cellcolor{teal!50}",
 }
 
-colors = ["blue", "red", "green", "orange", "purple", "yellow", "grey", "black"]
+colors = ["blue", "red", "green", "orange", "purple", "yellow", "grey", "black", "pink"]
 
-for desync_level in [25, 50, 75, 100, 125, 150, 200]:
+for desync_level in [25, 50, 75, 100, 125, 150, 175, 200]:
 
     figure = plt.gcf()
     figure.set_size_inches(6, 3)
@@ -103,7 +114,7 @@ for desync_level in [25, 50, 75, 100, 125, 150, 200]:
 
             dataset = f"{folder_results}/{dataset_name}_{model_type}_{leakage_model}_"
             countermeasure = f"desync_level_{desync_level}_desync_level_augmentation_{desync_level_augmentation}_"
-            augmentation = f"n_prof_{n_prof}_n_augmented_{n_augmented}_desync_file_id_{file_id_dict[desync_level]}"
+            augmentation = f"n_prof_{n_prof}_n_augmented_{n_augmented}_desync_file_id_{file_id_dict_id[desync_level]}"
 
             file_count = 0
             ge = 0

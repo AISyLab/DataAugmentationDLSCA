@@ -6,7 +6,7 @@
 
 #SBATCH --job-name=ascadr_augmentation
 #SBATCH --qos=short
-#SBATCH --time=03:00:00
+#SBATCH --time=04:00:00
 
 # 500MB memory per core
 # this is a hard limit
@@ -25,8 +25,7 @@ cd /home/nfs/gperin/AISY_Framework
 source env/bin/activate
 cd /home/nfs/gperin/paper_1_data_augmentation_paper
 
-srun python script_data_augmentation.py --dataset_name ascad-variable --leakage_model ID --desync $1 --desync_level $2 --desync_level_augmentation $3 --file_id $4 --n_prof $5 --n_augmented $6 --data_augmentation_per_epoch $7 --augmented_traces_only $8
-# srun python script_data_augmentation.py --dataset_name ascad-variable --leakage_model ID --desync $1 --gaussian_noise $1 --std $2 --std_augmentation $3 --file_id $4 --n_prof $5 --n_augmented $6 --data_augmentation_per_epoch $7 --augmented_traces_only $8
+srun python script_data_augmentation.py --dataset_name ascad-variable --leakage_model $1 --desync $2 --desync_level $3 --desync_level_augmentation $4 --file_id $5 --n_prof $6 --n_augmented $7 --data_augmentation_per_epoch $8 --augmented_traces_only $9
 exit 0
 
 
