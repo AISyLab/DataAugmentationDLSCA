@@ -58,7 +58,7 @@ def get_augmented_batch(x_profiling, y_profiling, ns, batch_size, batches_rnd, b
 
         x_mini_batch = x_mini_batch_augmented
 
-    if gaussian_noise:
+    else:
         # add gaussian noise to batch
         noise = np.random.normal(0, std_augmentation, np.shape(x_mini_batch))
         x_mini_batch = np.add(x_mini_batch, noise)
@@ -95,31 +95,33 @@ def generate_data_augmentation(x_profiling, y_profiling, batch_size, model_name,
         else:
             batches_rnd = np.random.randint(0, len(x_profiling) - batch_size, n_batches_augmented + n_batches_prof)
 
-        # parameters for Gaussian distribution
-        std_dict = {
-            12: 1.75,
-            25: 3.5,
-            50: 7,
-            75: 11.5,
-            100: 14,
-            125: 17.5,
-            150: 21,
-            175: 24.5,
-            200: 28
-        }
-        std = std_dict[desync_level_augmentation]
+        if desync:
+            # parameters for Gaussian distribution
+            std_dict = {
+                12: 1.75,
+                25: 3.5,
+                50: 7,
+                75: 11.5,
+                100: 14,
+                125: 17.5,
+                150: 21,
+                175: 24.5,
+                200: 28
+            }
+            std = std_dict[desync_level_augmentation]
 
-        if not data_augmentation_per_epoch:
-            # add desynchronization to mini-batch
-            normal_dist_numbers = np.random.normal(0, std, batch_size)
-            normal_dist_numbers_int = np.round(normal_dist_numbers)
-            shifts = np.array(
-                [int(s) + int(desync_level_augmentation / 2) for s in
-                 normal_dist_numbers_int])  # add desync_level / 2 to only have positive shifts
-            shifts[shifts < 0] = int(desync_level_augmentation / 2)
-            shifts[shifts > desync_level_augmentation] = int(desync_level_augmentation / 2)
+            if not data_augmentation_per_epoch:
+                # add desynchronization to mini-batch
+                normal_dist_numbers = np.random.normal(0, std, batch_size)
+                normal_dist_numbers_int = np.round(normal_dist_numbers)
+                shifts = np.array(
+                    [int(s) + int(desync_level_augmentation / 2) for s in
+                     normal_dist_numbers_int])  # add desync_level / 2 to only have positive shifts
+                shifts[shifts < 0] = int(desync_level_augmentation / 2)
+                shifts[shifts > desync_level_augmentation] = int(desync_level_augmentation / 2)
 
     while True:
+
         if batches_id[batch_count] == 0:
             x_mini_batch, y_mini_batch = get_original_batch(x_profiling, y_profiling, batch_count, batch_prof_count, batch_size)
 

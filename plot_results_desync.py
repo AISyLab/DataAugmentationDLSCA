@@ -3,10 +3,10 @@ import numpy as np
 import os
 
 folder_results = "D:/postdoc/paper_data_augmentation/random_search"
-dataset_name = "dpa_v42"
+dataset_name = "ascad-variable"
 model_type = "CNN"
-leakage_model = "HW"
-desync_level = 200
+leakage_model = "ID"
+desync_level = 25
 desync_level_augmentation = 0
 
 figure = plt.gcf()
@@ -18,7 +18,7 @@ for file_id in range(1000):
         npz_file = np.load(filepath, allow_pickle=True)
 
         guessing_entropy = npz_file["GE"]
-        if guessing_entropy[len(guessing_entropy) - 1] < 2:
+        if guessing_entropy[len(guessing_entropy) - 1] < 5:
             plt.plot(guessing_entropy, linewidth=1)
             print(file_id, npz_file["NT"])
             print(npz_file["hp_values"])

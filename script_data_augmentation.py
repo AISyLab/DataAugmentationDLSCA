@@ -68,20 +68,20 @@ if __name__ == "__main__":
             save_results = "/tudelft.net/staff-umbrella/dlsca/Guilherme/paper_1_data_augmentation_results/data_augmentation/data_augmentation_same_all_epochs/augmented_and_original_traces"
 
     # dataset_name = "ascad-variable"
-    # leakage_model = "ID"
-    # desync = True
-    # desync_level = 25
-    # desync_level_augmentation = 12
-    # gaussian_noise = False
-    # std = 1
-    # std_augmentation = 1
-    # file_id = 521
+    # leakage_model = "HW"
+    # desync = False
+    # desync_level = 0
+    # desync_level_augmentation = 0
+    # gaussian_noise = True
+    # std = 1.0
+    # std_augmentation = 1.0
+    # file_id = 2
     # n_prof = 200000
-    # n_augmented = 20000
+    # n_augmented = 200000
     # trace_folder = "D:/traces"
     # folder_results = "D:/postdoc/paper_data_augmentation/random_search"
-    # data_augmentation_per_epoch = False
-    # augmented_traces_only = True
+    # data_augmentation_per_epoch = True
+    # augmented_traces_only = False
     #
     # if data_augmentation_per_epoch:
     #     if augmented_traces_only:
@@ -154,7 +154,9 @@ if __name__ == "__main__":
     if desync:
         filepath = f"{folder_results}/{dataset_name}_{model_type}_{leakage_model}_desync_level_{desync_level}_desync_level_augmentation_0_desync_{file_id}.npz"
     else:
-        filepath = f"{folder_results}/{dataset_name}_{model_type}_{leakage_model}_std_{desync_level}_std_augmentation_0_gaussian_noise_{file_id}.npz"
+        filepath = f"{folder_results}/{dataset_name}_{model_type}_{leakage_model}_std_{std}_std_augmentation_0_gaussian_noise_{file_id}.npz"
+
+    print(filepath)
 
     if os.path.exists(filepath):
         npz_file = np.load(filepath, allow_pickle=True)

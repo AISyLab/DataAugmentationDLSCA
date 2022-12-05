@@ -2,33 +2,34 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+folder_results_search = "D:/postdoc/paper_data_augmentation/random_search"
 folder_results = "D:/postdoc/paper_data_augmentation/data_augmentation/data_augmentation_per_epoch/augmented_and_original_traces"
-dataset_name = "ascad-variable"
+dataset_name = "dpa_v42"
 model_type = "CNN"
-leakage_model = "ID"
+leakage_model = "HW"
 
-n_prof = 200000
+n_prof = 70000
 
 file_id_dict_id = {
-    25: 521,
-    50: 194,
-    75: 112,
-    100: 122,
-    125: 330,
-    150: 268,
-    175: 66,
-    200: 74
+    25: 19,
+    50: 392,
+    75: 653,
+    100: 47,
+    125: 525,
+    150: 515,
+    175: 55,
+    200: 667
 }
 
 file_id_dict_hw = {
-    25: 7,
-    50: 108,
-    75: 161,
-    100: 201,
-    125: 114,
-    150: 71,
-    175: 78,
-    200: 129
+    25: 95,
+    50: 123,
+    75: 105,
+    100: 521,
+    125: 357,
+    150: 712,
+    175: 739,
+    200: 717
 }
 
 desync_level_augmentation_dict = {
@@ -103,6 +104,14 @@ for desync_level in [25, 50, 75, 100, 125, 150, 175, 200]:
     figure = plt.gcf()
     figure.set_size_inches(6, 3)
 
+    file_id = file_id_dict_id[desync_level] if leakage_model == "ID" else file_id_dict_hw[desync_level]
+    filepath = f"{folder_results_search}/{dataset_name}_{model_type}_{leakage_model}_desync_level_{desync_level}_desync_level_augmentation_0_desync_{file_id}.npz"
+
+    nt_baseline = 3000
+    if os.path.exists(filepath):
+        npz_file = np.load(filepath, allow_pickle=True)
+        nt_baseline = npz_file["NT"]
+
     nts_all = []
 
     for color, desync_level_augmentation in enumerate(desync_level_augmentation_dict[desync_level]):
@@ -110,11 +119,11 @@ for desync_level in [25, 50, 75, 100, 125, 150, 175, 200]:
         nts = []
         ges = []
 
-        for n_augmented in range(20000, 210000, 20000):
+        for n_augmented in range(7000, 71000, 7000):
 
             dataset = f"{folder_results}/{dataset_name}_{model_type}_{leakage_model}_"
             countermeasure = f"desync_level_{desync_level}_desync_level_augmentation_{desync_level_augmentation}_"
-            augmentation = f"n_prof_{n_prof}_n_augmented_{n_augmented}_desync_file_id_{file_id_dict_id[desync_level]}"
+            augmentation = f"n_prof_{n_prof}_n_augmented_{n_augmented}_desync_file_id_{file_id_dict_id[desync_level] if leakage_model == 'ID' else file_id_dict_hw[desync_level]}"
 
             file_count = 0
             ge = 0
@@ -145,16 +154,19 @@ for desync_level in [25, 50, 75, 100, 125, 150, 175, 200]:
         nts_all.append(nts)
 
         plt.subplot(1, 2, 1)
-        plt.plot(list(range(20000, 210000, 20000)), ges, color=colors[color], label=f"da - {desync_level_augmentation}")
+        plt.plot(list(range(7000, 71000, 7000)), ges, color=colors[color], label=f"da - {desync_level_augmentation}")
         plt.subplot(1, 2, 2)
-        plt.plot(list(range(20000, 210000, 20000)), nts, color=colors[color], label=f"da - {desync_level_augmentation}")
+        plt.plot(list(range(7000, 71000, 7000)), nts, color=colors[color], label=f"da - {desync_level_augmentation}")
 
     nts_all = np.array(nts_all)
 
     min_nt = np.min(nts_all)
 
     for color, desync_level_augmentation in enumerate(desync_level_augmentation_dict[desync_level]):
-        nts_string = ""
+        if color > 0:
+            nts_string = f"& "
+        else:
+            nts_string = ""
         for nt in nts_all[color]:
             if nt == 3000:
                 nts_string += f"& - "
@@ -164,8 +176,9 @@ for desync_level in [25, 50, 75, 100, 125, 150, 175, 200]:
                 cell_color = f"{cell_color_dict[cell_value]}"
                 nts_string += f"& {cell_color}{int(nt)} "
         if color == 0:
+            baseline_nt_str = "\multirow{" + f"{len(desync_level_augmentation_dict[desync_level])}" + "}{*}{" + f"{int(nt_baseline) if nt_baseline < 3000 else '$>$ 3000'}" + "}"
             print(
-                "\multirow{" + f"{len(desync_level_augmentation_dict[desync_level])}" + "}{*}{" + f"{desync_level}" + "}" + f" & {desync_level_augmentation} {nts_string}" + "\\\\")
+                "\multirow{" + f"{len(desync_level_augmentation_dict[desync_level])}" + "}{*}{" + f"{desync_level}" + "}" + f" & {desync_level_augmentation} & {baseline_nt_str} {nts_string}" + "\\\\")
         else:
             if color == len(desync_level_augmentation_dict[desync_level]) - 1:
                 print(f"& {desync_level_augmentation} {nts_string}" + "\\\\ \hline")
